@@ -11,4 +11,15 @@ export class AppService {
   getAnswer(name: string): string {
     return `Hello, ${name}!`;
   }
+  getRouteParams(userId: number): string {
+    return 'This is the user id: ' + userId;
+  }
+  getQueryStrings(userName: string, age: number): string {
+    return (
+      'This is the user name and age (Using Query Strings): ' +
+      userName +
+      ', ' +
+      age
+    );
+  }
 }
