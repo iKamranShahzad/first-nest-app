@@ -13,6 +13,7 @@ export class AuthCheckMiddleware implements NestMiddleware {
 
       if (!req.headers.authorization) {
         this.logger.warn('Missing Authorization header');
+        // throw new UnauthorizedException(); // Uncomment this line to throw an exception (Exception filter will handle it)
       }
     }
     next();
