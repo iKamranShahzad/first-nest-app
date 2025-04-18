@@ -9,10 +9,14 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AnswerDTO, RegisterUserDto } from './dto/app.dto';
+import { SumServiceService } from './sum-service/sum-service.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly sumService: SumServiceService,
+  ) {}
 
   // Get Handlers
   @Get()
@@ -26,6 +30,14 @@ export class AppController {
     @Query('age', ParseIntPipe) age: number,
   ): string {
     return this.appService.getQueryStrings(userName, age);
+  }
+
+  @Get('sum')
+  getSum(
+    @Query('a', ParseIntPipe) a: number,
+    @Query('b', ParseIntPipe) b: number,
+  ): { sum: number } {
+    return { sum: this.sumService.getSum(a, b) };
   }
 
   @Get('/askquestion')
