@@ -8,12 +8,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AnswerDTO } from './dto/app.dto';
+import { AnswerDTO, RegisterUserDto } from './dto/app.dto';
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  // Get Handlers
   @Get()
   getHello(): string {
     return this.appService.getHello();
@@ -32,13 +33,19 @@ export class AppController {
     return this.appService.askQuestion();
   }
 
+  @Get(':id')
+  getRouteParams(@Param('id', ParseIntPipe) userId: number): string {
+    return this.appService.getRouteParams(userId);
+  }
+
+  // Post Handlers
   @Post('/answer')
   answer(@Body() answerDTO: AnswerDTO): string {
     return this.appService.getAnswer(answerDTO.name);
   }
 
-  @Get(':id')
-  getRouteParams(@Param('id', ParseIntPipe) userId: number): string {
-    return this.appService.getRouteParams(userId);
+  @Post('register')
+  registerUser(@Body() registerUserDTO: RegisterUserDto) {
+    return this.appService.registerUser(registerUserDTO);
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { RegisterUserDto } from './dto/app.dto';
 
 @Injectable()
 export class AppService {
@@ -21,5 +22,14 @@ export class AppService {
       ', ' +
       age
     );
+  }
+  registerUser(dto: RegisterUserDto): {
+    message: string;
+    user: RegisterUserDto;
+  } {
+    return {
+      message: 'User registered successfully',
+      user: dto,
+    };
   }
 }
