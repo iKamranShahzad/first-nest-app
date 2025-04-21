@@ -2,6 +2,11 @@
 
 A simple starter backend project built with [NestJS](https://nestjs.com/) and TypeScript.
 
+## Prerequisites
+
+- Node.js v16+
+- npm v8+
+  
 ## Features
 
 - REST API with multiple endpoints
