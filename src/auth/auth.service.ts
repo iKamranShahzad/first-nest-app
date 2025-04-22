@@ -1,0 +1,38 @@
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
+import { database, usersCollection } from '../database/arangodb.provider';
+import * as argon2 from 'argon2';
+import { RegisterDto, LoginDto } from './dto/auth.dto';
+
+@Injectable()
+export class AuthService {
+  async register(dto: RegisterDto) {
+    const cursor = await database.query(
+      'FOR u IN users FILTER u.email == @email RETURN u',
+      { email: dto.email },
+    );
+    const existing = await cursor.next();
+    if (existing) throw new ConflictException('Email already registered');
+
+    const hashed = await argon2.hash(dto.password);
+    const user = { email: dto.email, password: hashed };
+    await usersCollection.save(user);
+    return { message: 'User registered successfully', email: dto.email };
+  }
+
+  async login(dto: LoginDto) {
+    const cursor = await database.query(
+      'FOR u IN users FILTER u.email == @email RETURN u',
+      { email: dto.email },
+    );
+    const user = await cursor.next();
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+    const valid = await argon2.verify(user.password, dto.password);
+    if (!valid) throw new UnauthorizedException('Invalid credentials');
+    // will add some session thingy here or tokens maybe
+    return { message: 'Login successful', email: dto.email };
+  }
+}
