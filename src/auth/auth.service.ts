@@ -14,7 +14,7 @@ export class AuthService {
       'FOR u IN users FILTER u.email == @email RETURN u',
       { email: dto.email },
     );
-    const existing = await cursor.next();
+    const existing = (await cursor.next()) as RegisterDto | undefined;
     if (existing) throw new ConflictException('Email already registered');
 
     const hashed = await argon2.hash(dto.password);
@@ -28,7 +28,7 @@ export class AuthService {
       'FOR u IN users FILTER u.email == @email RETURN u',
       { email: dto.email },
     );
-    const user = await cursor.next();
+    const user = (await cursor.next()) as LoginDto | undefined;
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const valid = await argon2.verify(user.password, dto.password);
     if (!valid) throw new UnauthorizedException('Invalid credentials');
