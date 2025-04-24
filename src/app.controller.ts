@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AnswerDTO, RegisterUserDto } from './dto/app.dto';
+import { AnswerDTO } from './dto/app.dto';
 import { SumServiceService } from './sum-service/sum-service.service';
 
 @Controller()
@@ -54,10 +54,5 @@ export class AppController {
   @Post('/answer')
   answer(@Body() answerDTO: AnswerDTO): string {
     return this.appService.getAnswer(answerDTO.name);
-  }
-
-  @Post('register')
-  registerUser(@Body() registerUserDTO: RegisterUserDto) {
-    return this.appService.registerUser(registerUserDTO);
   }
 }
