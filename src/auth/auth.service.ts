@@ -6,13 +6,13 @@ import {
 import { database, usersCollection } from '../database/arangodb.provider';
 import * as argon2 from 'argon2';
 import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { aql } from 'arangojs';
 
 @Injectable()
 export class AuthService {
   async register(dto: RegisterDto) {
     const cursor = await database.query(
-      'FOR u IN users FILTER u.email == @email RETURN u',
-      { email: dto.email },
+      aql`FOR u IN users FILTER u.email == ${dto.email} RETURN u`,
     );
     const existing = (await cursor.next()) as RegisterDto | undefined;
     if (existing) throw new ConflictException('Email already registered');
@@ -25,8 +25,7 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const cursor = await database.query(
-      'FOR u IN users FILTER u.email == @email RETURN u',
-      { email: dto.email },
+      aql`FOR u IN users FILTER u.email == ${dto.email} RETURN u`,
     );
     const user = (await cursor.next()) as LoginDto | undefined;
     if (!user) throw new UnauthorizedException('Invalid credentials');
