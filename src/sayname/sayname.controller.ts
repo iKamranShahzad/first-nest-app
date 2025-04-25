@@ -1,7 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { SayNameDTO } from 'src/dto/sayName.dto';
 import { SaynameService } from './sayname.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'))
 @Controller('sayname')
 export class SaynameController {
   constructor(private readonly nameService: SaynameService) {}
