@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'This is my first NestJS backend project.';
+  getHello(): { message: string } {
+    return { message: 'Welcome to my first NestJS App.' };
   }
   askQuestion(): string {
     return 'What is your name?';

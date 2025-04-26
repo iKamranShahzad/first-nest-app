@@ -20,7 +20,7 @@ export class AppController {
 
   // Get Handlers
   @Get()
-  getHello(): string {
+  getHello(): { message: string } {
     return this.appService.getHello();
   }
 
