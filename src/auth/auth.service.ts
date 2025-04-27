@@ -33,7 +33,6 @@ export class AuthService {
     if (!user) throw new UnauthorizedException('Invalid credentials');
     const valid = await argon2.verify(user.password, dto.password);
     if (!valid) throw new UnauthorizedException('Invalid credentials');
-    // Generate JWT token
     const payload = { email: user.email, sub: user._key };
     const access_token = await this.jwtService.signAsync(payload);
     return { message: 'Login successful', email: dto.email, access_token };
