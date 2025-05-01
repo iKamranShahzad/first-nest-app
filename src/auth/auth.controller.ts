@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Get, Res, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto } from './dto/auth.dto';
 import { Response } from 'express';
@@ -6,6 +6,11 @@ import { Response } from 'express';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('verify')
+  async verify(@Query('token') token: string) {
+    return this.authService.verifyAccount(token);
+  }
 
   @Post('register')
   register(@Body() dto: RegisterDto) {
