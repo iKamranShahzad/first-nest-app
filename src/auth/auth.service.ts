@@ -71,5 +71,4 @@ export class AuthService {
     const access_token = await this.jwtService.signAsync(payload);
     return { message: 'Login successful', email: dto.email, access_token };
   }
-  // ...existing code...
 }
