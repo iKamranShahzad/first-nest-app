@@ -22,3 +22,20 @@ export class LoginDto {
   password: string;
   _key?: string;
 }
+
+export class ResetPasswordRequestDto {
+  @ApiProperty()
+  @IsEmail()
+  email: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty()
+  @IsString()
+  @MinLength(6)
+  password: string;
+
+  @ApiProperty()
+  @IsString()
+  token: string;
+}

@@ -1,11 +1,21 @@
 import { Body, Controller, Post, Get, Res, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import {
+  RegisterDto,
+  LoginDto,
+  ResetPasswordDto,
+  ResetPasswordRequestDto,
+} from './dto/auth.dto';
 import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Post('reset')
+  async reset(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetAccountPassword(dto);
+  }
 
   @Get('verify')
   async verify(@Query('token') token: string) {
@@ -42,5 +52,10 @@ export class AuthController {
       secure: false, // set to true if using HTTPS
     });
     return { message: 'Logged out successfully' };
+  }
+
+  @Post('reset-password-request')
+  async resetPasswordRequest(@Body() dto: ResetPasswordRequestDto) {
+    return this.authService.resetPasswordRequest(dto);
   }
 }
