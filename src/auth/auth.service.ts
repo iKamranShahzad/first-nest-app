@@ -104,10 +104,10 @@ export class AuthService {
       | (LoginDto & { isVerified?: boolean })
       | undefined;
     if (!user) throw new UnauthorizedException('Invalid credentials');
-    if (user.isVerified === false)
-      throw new UnauthorizedException('Account not verified');
     const valid = await argon2.verify(user.password, dto.password);
     if (!valid) throw new UnauthorizedException('Invalid credentials');
+    if (user.isVerified === false || user.isVerified === undefined)
+      throw new UnauthorizedException('Account not verified');
     const payload = { email: user.email, sub: user._key };
     const access_token = await this.jwtService.signAsync(payload);
     return { message: 'Login successful', email: dto.email, access_token };
@@ -132,5 +132,26 @@ export class AuthService {
     return {
       message: 'If your email is registered, a reset link has been sent.',
     };
+  }
+
+  async resendVerification(email: string) {
+    const cursor = await database.query(
+      aql`FOR u IN users FILTER u.email == ${email} RETURN u`,
+    );
+    const user = await cursor.next();
+    if (!user) throw new UnauthorizedException('Email not registered');
+    if (user.isVerified)
+      throw new ConflictException('Account already verified');
+
+    const verificationToken = randomBytes(32).toString('hex');
+    const verificationTokenExpires = new Date(
+      Date.now() + 24 * 60 * 60 * 1000,
+    ).toISOString();
+    await usersCollection.update(user._key, {
+      verificationToken,
+      verificationTokenExpires,
+    });
+    await sendVerificationEmail(email, verificationToken);
+    return { message: 'Verification email resent successfully.' };
   }
 }
