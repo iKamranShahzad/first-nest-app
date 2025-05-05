@@ -19,6 +19,12 @@ export class AppController {
   ) {}
 
   // Get Handlers
+  @Get('redis-get')
+  async getRedisString(@Query('key') key: string) {
+    const value = await this.appService.getRedisString(key);
+    return { key, value };
+  }
+
   @Get()
   getHello(): { message: string } {
     return this.appService.getHello();
@@ -54,5 +60,13 @@ export class AppController {
   @Post('/answer')
   answer(@Body() answerDTO: AnswerDTO): string {
     return this.appService.getAnswer(answerDTO.name);
+  }
+
+  @Post('redis-set')
+  async setRedisString(
+    @Query('key') key: string,
+    @Query('value') value: string,
+  ) {
+    return this.appService.setRedisString(key, value);
   }
 }

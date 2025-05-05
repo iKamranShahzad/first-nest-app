@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { redis } from './database/redis.provider';
 
 @Injectable()
 export class AppService {
@@ -21,5 +22,13 @@ export class AppService {
       ', ' +
       age
     );
+  }
+  async setRedisString(key: string, value: string): Promise<string> {
+    await redis.set(key, value);
+    return `Set ${key} = ${value}`;
+  }
+
+  async getRedisString(key: string): Promise<string | null> {
+    return await redis.get(key);
   }
 }

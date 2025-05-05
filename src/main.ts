@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import * as csurf from 'csurf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,7 +22,7 @@ async function bootstrap() {
     origin: 'http://localhost:5173',
     credentials: true,
   });
-  // app.use(csurf({ cookie: true })); Won't be adding this now
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
