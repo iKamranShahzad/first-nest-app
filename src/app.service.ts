@@ -4,7 +4,7 @@ import { redis } from './database/redis.provider';
 @Injectable()
 export class AppService {
   getHello(): { message: string } {
-    return { message: 'Welcome to my first NestJS App.' };
+    return { message: 'Welcome to the Root Page of my App!' };
   }
   askQuestion(): string {
     return 'What is your name?';
